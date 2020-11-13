@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "249409322213",
+    "firebase_url": "https://medicinemultanapp.firebaseio.com",
+    "project_id": "medicinemultanapp",
+    "storage_bucket": "medicinemultanapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249409322213:android:e299a8bfe20c3d1feb280c",
+        "android_client_info": {
+          "package_name": "com.example.medicine_customer_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "249409322213-iikpd5nqilpu87dqvjbagodkll5cqfrm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.medicine_customer_app",
+            "certificate_hash": "f248e0ec3d882fe88bb70ac77e099f1975677a7d"
+          }
+        },
+        {
+          "client_id": "249409322213-fuag5gpegvtbsnjkk1ue7nd0a7t9t9bs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGjVazV0TxVj94g-zDrM8PbMwT7mQBJqQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "249409322213-fuag5gpegvtbsnjkk1ue7nd0a7t9t9bs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
