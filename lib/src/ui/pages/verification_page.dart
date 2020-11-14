@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medicine_customer_app/src/constants.dart';
+import 'package:medicine_customer_app/src/data/app_data.dart';
 import 'package:medicine_customer_app/src/data/models/users_model.dart';
 import 'package:medicine_customer_app/src/services/user_service.dart';
 import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
@@ -9,6 +10,7 @@ import 'package:medicine_customer_app/src/ui/widgets/button_widget.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerificationPage extends StatefulWidget {
   final String userName;
@@ -37,20 +39,20 @@ class _VerificationPageState extends State<VerificationPage> {
         _signInUser(credential);
       },
       verificationFailed: (FirebaseAuthException ex) {
+        // Navigator.of(context).pop();
         _scaffoldKey.currentState.showSnackBar(
           ShowSnackBar(
             icon: Icons.error,
-            text: 'OTP did not match',
+            text: '$ex',
           ),
         );
-        print(ex);
+        print('Exception is: $ex');
         if (ex.code == 'invalid-phone-number') {
           print('The provided phone number is not valid');
         }
       },
       codeSent: (String verificationId, [int forceResendingToken]) {
-        print('Sent');
-        _clickable = true;
+        setState(() => _clickable = true);
         _scaffoldKey.currentState.showSnackBar(
           ShowSnackBar(
             icon: Icons.info,
@@ -77,24 +79,37 @@ class _VerificationPageState extends State<VerificationPage> {
     }
   }
 
-  _saveUser(String userId) async {
+  _saveUser(String userId) {
     UserModel _user = UserModel(
       name: widget.userName,
       phoneNumber: widget.phoneNumber,
     );
     _user..id = userId;
-    UserService().fetchOneFirestore(userId).then((value) {
-      if (value != null) {
-        //update
+    UserModel _insertedUser;
+    UserService().fetchNumberFirestore(_user.phoneNumber).then((value) async {
+      if (value.docs?.isEmpty ?? true) {
+        _insertedUser = await UserService().insertUser(_user);
+        print('Insert');
       } else {
-        //insert
+        print('Update');
+        UserModel u = UserService().parseModel(value.docs.first);
+        u.name = _user.name;
+        await UserService().updateFirestore(u);
+        _insertedUser = u;
+      }
+      if (_insertedUser != null) {
+        SharedPreferences sp = await SharedPreferences.getInstance();
+        sp.setString('userId', _insertedUser.id);
+        sp.setString('userName', _insertedUser.name);
+        sp.setString('userPhone', _insertedUser.phoneNumber);
+        AppData.isSignedIn = true;
+        AppData.uId = _insertedUser.id;
+        AppData.uName = _insertedUser.name;
+        AppData.phoneNo = _insertedUser.phoneNumber;
+        Navigator.of(context).pop();
+        navigateTo(context, HomePage(), true);
       }
     });
-    UserModel _insertedUser = await UserService().insertUser(_user);
-    if (_insertedUser != null) {
-      Navigator.of(context).pop();
-      navigateTo(context, HomePage(), true);
-    }
   }
 
   @override
@@ -104,16 +119,15 @@ class _VerificationPageState extends State<VerificationPage> {
   }
 
   _pressedAction() {
-    if (_clickable) {
-      if (_formKey.currentState.validate()) {
-        WaitingDialog(context: context).show();
-        _formKey.currentState.save();
-        AuthCredential authCredential = PhoneAuthProvider.credential(
-          verificationId: _verificationId,
-          smsCode: _code,
-        );
-        _signInUser(authCredential);
-      }
+    print('Clicked');
+    if (_formKey.currentState.validate()) {
+      WaitingDialog(context: context).show();
+      _formKey.currentState.save();
+      AuthCredential authCredential = PhoneAuthProvider.credential(
+        verificationId: _verificationId,
+        smsCode: _code,
+      );
+      _signInUser(authCredential);
     }
   }
 
@@ -182,8 +196,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     SizedBox(height: 20.0),
                     ButtonWidget(
                       text: 'Confirm',
-                      onPressed: _clickable ? _pressedAction() : null,
-                      // onPressed: _pressedAction,
+                      onPressed: _clickable ? _pressedAction : null,
                     ),
                   ],
                 ),

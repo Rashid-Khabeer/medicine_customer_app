@@ -1,4 +1,6 @@
 import 'package:medicine_customer_app/src/constants.dart';
+import 'package:medicine_customer_app/src/data/app_data.dart';
+import 'package:medicine_customer_app/src/ui/pages/home_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/sigin_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,6 @@ class MedicineUserApp extends MaterialApp {
             ),
             cursorColor: kMainColor,
           ),
-          home: SigninPage(),
+          home: AppData.isSignedIn ? HomePage() : SigninPage(),
         );
 }

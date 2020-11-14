@@ -6,8 +6,8 @@ class ButtonWidget extends FlatButton {
   ButtonWidget({
     Function onPressed,
     String text,
-    Color color=kMainColor,
-    double height=50.0,
+    Color color = kMainColor,
+    double height = 50.0,
   }) : super(
           height: height,
           color: color,
@@ -15,6 +15,7 @@ class ButtonWidget extends FlatButton {
             borderRadius: BorderRadius.all(Radius.circular(30.0)),
           ),
           // elevation: 0,
+          disabledColor: Colors.grey,
           onPressed: onPressed,
           child: Text(
             text,

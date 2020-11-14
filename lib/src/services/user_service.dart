@@ -20,8 +20,12 @@ class UserService extends MedicineService<UserModel> {
     } catch (e) {
       print("exception");
       throw e;
-      // print(e);
-      // return null;
     }
   }
+
+  Future<QuerySnapshot> fetchNumberFirestore(String phoneNo) async =>
+      await FirebaseFirestore.instance
+          .collection(collectionName)
+          .where('PhoneNumber', isEqualTo: phoneNo)
+          .get();
 }
