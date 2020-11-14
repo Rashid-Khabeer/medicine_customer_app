@@ -145,7 +145,7 @@ class _VerificationPageState extends State<VerificationPage> {
           appBar: AppBar(
             title: Text(
               'Verification',
-              style: TextStyle(color: kMainColor),
+              style: kAppBarStyle,
             ),
           ),
           backgroundColor: Colors.white,

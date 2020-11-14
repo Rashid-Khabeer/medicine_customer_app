@@ -17,7 +17,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       appBar: AppBar(
         title: Text(
           'Order Detail',
-          style: TextStyle(color: kMainColor),
+          style: kAppBarStyle,
         ),
       ),
       body: SingleChildScrollView(

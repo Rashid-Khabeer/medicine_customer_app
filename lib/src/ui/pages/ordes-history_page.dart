@@ -18,7 +18,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       appBar: AppBar(
         title: Text(
           'History',
-          style: TextStyle(color: kMainColor),
+          style: kAppBarStyle,
         ),
       ),
       body: SingleChildScrollView(

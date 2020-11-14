@@ -17,7 +17,7 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(
         title: Text(
           'Orders',
-          style: TextStyle(color: kMainColor),
+          style: kAppBarStyle,
         ),
       ),
       body: SingleChildScrollView(

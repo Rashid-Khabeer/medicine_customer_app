@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const kMainColor = Color(0xFF075095);
 const kSecondaryColor = Color(0xFF3AD1EE);
 
+const kAppBarStyle = TextStyle(color: kMainColor);
 const k16TextStyle = TextStyle(color: kMainColor, fontSize: 16.0);
 const k18BlackTextStyle = TextStyle(fontSize: 18.0);
 const k18WhiteTextStyle = TextStyle(color: Colors.white, fontSize: 18.0);

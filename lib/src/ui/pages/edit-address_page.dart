@@ -57,7 +57,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
       appBar: AppBar(
         title: Text(
           'Edit Address',
-          style: TextStyle(color: kMainColor),
+          style: kAppBarStyle,
         ),
         actions: [
           FlatButton(

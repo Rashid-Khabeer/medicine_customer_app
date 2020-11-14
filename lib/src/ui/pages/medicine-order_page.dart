@@ -1,5 +1,5 @@
+import 'package:medicine_customer_app/src/ui/modals/snackbar.dart';
 import 'package:medicine_customer_app/src/ui/pages/edit-address_page.dart';
-import 'package:medicine_customer_app/src/ui/pages/order-details_page.dart';
 import 'package:medicine_customer_app/src/ui/widgets/image-selector_widget.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +12,9 @@ class MedicineOrderPage extends StatefulWidget {
 }
 
 class _MedicineOrderPageState extends State<MedicineOrderPage> {
+  String _note;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -20,11 +23,12 @@ class _MedicineOrderPageState extends State<MedicineOrderPage> {
         if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
       },
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            'Medicine Order',
-            style: TextStyle(color: kMainColor),
+            'Order',
+            style: kAppBarStyle,
           ),
         ),
         body: SingleChildScrollView(
@@ -115,6 +119,7 @@ class _MedicineOrderPageState extends State<MedicineOrderPage> {
                   padding:
                       EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                   child: TextFormField(
+                    onChanged: (value) => _note = value,
                     style: TextStyle(fontSize: 20.0),
                     decoration: InputDecoration(
                       icon: Icon(
@@ -141,9 +146,21 @@ class _MedicineOrderPageState extends State<MedicineOrderPage> {
           elevation: 0,
           label: Text('Order'),
           icon: Icon(Icons.bookmark_border),
-          onPressed: () => navigateTo(context, OrderDetailsPage()),
+          onPressed: _orderClicked,
         ),
       ),
     );
+  }
+
+  _orderClicked() {
+    if (_note?.isNotEmpty ?? false) {
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+        ShowSnackBar(
+          icon: Icons.error,
+          text: 'Please enter medicine info or upload prescription',
+        ),
+      );
+    }
   }
 }

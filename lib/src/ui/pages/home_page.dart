@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:medicine_customer_app/src/constants.dart';
+import 'package:medicine_customer_app/src/data/app_data.dart';
 import 'package:medicine_customer_app/src/ui/pages/cart_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/edit-address_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/medicine-order_page.dart';
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
         ],
         title: Text(
           'Home',
-          style: TextStyle(color: kMainColor),
+          style: kAppBarStyle,
         ),
       ),
       drawer: Drawer(
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             UserAccountsDrawerHeader(
               accountName: Text(
-                'Rashid Khabeer',
+                '${AppData.uName}',
                 style: TextStyle(fontSize: 18.0),
               ),
               currentAccountPicture: CircleAvatar(
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                   size: 65.0,
                 ),
               ),
-              accountEmail: Text('+923127191646'),
+              accountEmail: Text('${AppData.phoneNo}'),
             ),
             ListTile(
               title: Text('History'),

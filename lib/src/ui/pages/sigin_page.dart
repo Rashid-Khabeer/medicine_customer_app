@@ -30,7 +30,7 @@ class _SigninPageState extends State<SigninPage> {
         appBar: AppBar(
           title: Text(
             'Signin',
-            style: TextStyle(color: kMainColor),
+            style: kAppBarStyle,
           ),
         ),
         backgroundColor: Colors.white,
