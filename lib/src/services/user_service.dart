@@ -8,7 +8,8 @@ class UserService extends MedicineService<UserModel> {
 
   @override
   UserModel parseModel(DocumentSnapshot document) =>
-      UserModel.fromJson(document.data())..id = document.id;
+      UserModel.fromJson(document.data())
+        ..id = document.id;
 
   insertUser(UserModel user) async {
     try {

@@ -1,12 +1,13 @@
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
 import 'package:medicine_customer_app/src/ui/modals/image_picker.dart';
 import 'package:medicine_customer_app/src/ui/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 
 class ImageSelector extends StatefulWidget {
-  final List<String> images;
-  final Function(List<String> file) onChanged;
+  final List<File> images;
+  final Function(List<File> file) onChanged;
 
   ImageSelector({this.images, this.onChanged}) : assert(onChanged != null);
 
@@ -15,8 +16,9 @@ class ImageSelector extends StatefulWidget {
 }
 
 class _ImageSelectorState extends State<ImageSelector> {
-  // List<File> _images;
-  List<String> _images;
+  ImagePicker _imagePicker = ImagePicker();
+
+  List<File> _images;
 
   @override
   void initState() {
@@ -58,7 +60,7 @@ class _ImageSelectorState extends State<ImageSelector> {
                   child: Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: FileImage(File(_images[index])),
+                        image: FileImage(_images[index]),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -72,39 +74,23 @@ class _ImageSelectorState extends State<ImageSelector> {
   }
 
   _imgFromGallery() async {
-    print('Gallery Function');
     Navigator.of(context).pop();
-    // try {
-    //   Navigator.of(context).pop();
-    //   var result = await FilePicker.platform.pickFiles(
-    //     type: FileType.image,
-    //     allowMultiple: true,
-    //   );
-    //   List<String> selectedList = result.paths;
-    //   setState(() {
-    //     _images.addAll(selectedList);
-    //     widget.onChanged(_images);
-    //   });
-    // } on PlatformException catch (e) {print(e);}
-    // Navigator.of(context).pop();
-    // final pickedImage =
-    //     await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
-    // setState(() {
-    //   _images.add(File(pickedImage.path));
-    //   widget.onChanged(_images);
-    // });
+    final pickedImage = await _imagePicker.getImage(
+        source: ImageSource.gallery, imageQuality: 50);
+    setState(() {
+      _images.add(File(pickedImage.path));
+      widget.onChanged(_images);
+    });
   }
 
   _imgFromCamera() async {
-    print('Camera');
     Navigator.of(context).pop();
-    // Navigator.of(context).pop();
-    // final pickedImage =
-    //     await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
-    // setState(() {
-    //   _images.add(pickedImage.path.toString());
-    //   widget.onChanged(_images);
-    // });
+    final pickedImage = await _imagePicker.getImage(
+        source: ImageSource.camera, imageQuality: 50);
+    setState(() {
+      _images.add(File(pickedImage.path));
+      widget.onChanged(_images);
+    });
   }
 
   _deleteDialog(index) {

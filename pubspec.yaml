@@ -17,10 +17,11 @@ dependencies:
   rflutter_alert: ^1.1.0
   google_maps_flutter: ^1.0.3
   firebase_auth: ^0.18.1+2
-  cloud_firestore: ^0.14.2
+  cloud_firestore: ^0.14.3
   firebase_storage: ^4.0.1
   firebase_core: ^0.5.1
   shared_preferences: ^0.5.12+4
+  path_provider: ^1.6.24
 
 dev_dependencies:
   flutter_test:

@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                       tween: Tween<double>(begin: 0, end: 1),
                       curve: Curves.easeIn,
                       child: Text(
-                        'Hello! Rashid',
+                        'Hello! \n${AppData.uName}',
                         style: TextStyle(
                             color: kMainColor,
                             fontSize: 36.0,

@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:medicine_customer_app/src/data/app_data.dart';
+import 'package:medicine_customer_app/src/data/models/orders_model.dart';
+import 'package:medicine_customer_app/src/services/order_service.dart';
+import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
 import 'package:medicine_customer_app/src/ui/modals/snackbar.dart';
 import 'package:medicine_customer_app/src/ui/pages/edit-address_page.dart';
+import 'package:medicine_customer_app/src/ui/pages/order-details_page.dart';
 import 'package:medicine_customer_app/src/ui/widgets/image-selector_widget.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +22,7 @@ class MedicineOrderPage extends StatefulWidget {
 class _MedicineOrderPageState extends State<MedicineOrderPage> {
   String _note;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<File> _images;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +144,7 @@ class _MedicineOrderPageState extends State<MedicineOrderPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.0),
                   child: ImageSelector(
-                    onChanged: (images) {},
+                    onChanged: (images) => _images = images,
                   ),
                 ),
               ],
@@ -152,8 +161,32 @@ class _MedicineOrderPageState extends State<MedicineOrderPage> {
     );
   }
 
-  _orderClicked() {
+  _orderClicked() async {
+    bool _flag = false;
     if (_note?.isNotEmpty ?? false) {
+      _flag = true;
+    }
+    if (_images?.isNotEmpty ?? false) {
+      _flag = true;
+    }
+    if (_flag) {
+      WaitingDialog(context: context).show();
+      Orders _order = Orders(
+        adminAssignedBoy: false,
+        adminBillStatus: false,
+        note: _note ?? '',
+        orderCategory: 'Medicine',
+        userConfirmStatus: false,
+        userId: AppData.uId,
+        timestamp: Timestamp.now(),
+        files: _images,
+      );
+      Orders o = await OrderService().insertOrder(_order);
+      if (o != null) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        navigateTo(context, OrderDetailsPage());
+      }
     } else {
       _scaffoldKey.currentState.showSnackBar(
         ShowSnackBar(

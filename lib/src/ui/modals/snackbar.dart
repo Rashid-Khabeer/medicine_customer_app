@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShowSnackBar extends SnackBar {
@@ -6,7 +7,8 @@ class ShowSnackBar extends SnackBar {
           content: Row(
             children: [
               Icon(icon),
-              Text(text),
+              SizedBox(width: 5.0),
+              Expanded(child: Text(text)),
             ],
           ),
         );
