@@ -17,6 +17,7 @@ class MedicineUserApp extends MaterialApp {
   MedicineUserApp()
       : super(
           title: 'Medicine At Home',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primaryColor: kMainColor,
             appBarTheme: AppBarTheme(

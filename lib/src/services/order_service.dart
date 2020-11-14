@@ -11,7 +11,8 @@ class OrderService extends MedicineService<Orders> {
 
   @override
   Orders parseModel(DocumentSnapshot document) {
-    return Orders.fromJson(document.data())..id = document.id;
+    return Orders.fromJson(document.data())
+      ..id = document.id;
   }
 
   insertOrder(Orders order) async {
@@ -27,7 +28,7 @@ class OrderService extends MedicineService<Orders> {
     for (File image in images) {
       String fileName = basename(image.path);
       StorageReference firebaseStorageRef =
-          FirebaseStorage.instance.ref().child(fileName);
+      FirebaseStorage.instance.ref().child(fileName);
       StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
       await uploadTask.onComplete;
       var downUrl = await firebaseStorageRef.getDownloadURL();
@@ -35,5 +36,21 @@ class OrderService extends MedicineService<Orders> {
       urls.add(url);
     }
     return urls;
+  }
+
+  Stream<QuerySnapshot> fetchInComplete() async* {
+    final snapshots = FirebaseFirestore.instance
+        .collection(collectionName)
+        .where('isComplete', isEqualTo: false).snapshots();
+
+    // snapshots.listen((event) {
+    //   print(event.docs);
+    // });
+    //
+    // print(await snapshots);
+    // print('length: ' + (await snapshots.length).toString());
+    // print('after length: ');
+
+    yield* snapshots;
   }
 }

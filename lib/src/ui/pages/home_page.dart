@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:ui';
 import 'package:medicine_customer_app/src/constants.dart';
 import 'package:medicine_customer_app/src/data/app_data.dart';
+import 'package:medicine_customer_app/src/services/order_service.dart';
 import 'package:medicine_customer_app/src/ui/pages/cart_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/edit-address_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/medicine-order_page.dart';
@@ -9,6 +11,7 @@ import 'package:medicine_customer_app/src/ui/views/home-card_view.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:medicine_customer_app/src/data/models/orders_model.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,15 +19,68 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  _fun() {
+    // FirebaseFirestore.instance
+    //     .collection('Orders')
+    //     .where('isComplete', isEqualTo: false)
+    // .get().then((value) => {
+    //   value.docs.forEach((element) {
+    //     print('isComplete: ${element["isComplete"]}');
+    //   })
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _fun();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         actions: <Widget>[
-          IconButton(
-              icon: Icon(CupertinoIcons.cart),
-              onPressed: () => navigateTo(context, CartPage())),
+          Padding(
+            padding: EdgeInsets.only(right: 5.0, top: 5.0),
+            child: Stack(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    CupertinoIcons.cart,
+                    color: kMainColor,
+                    size: 28.0,
+                  ),
+                  onPressed: () => navigateTo(context, CartPage()),
+                ),
+                Positioned(
+                  right: 11,
+                  top: 5,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: OrderService().fetchInComplete(),
+                    builder: (context, list) {
+                      if (list.data.size>0) {
+                        return Container(
+                          padding: EdgeInsets.all(2.0),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: 14,
+                            minHeight: 14,
+                          ),
+                          child: Text(
+                            '${list.data.size}',
+                            textAlign: TextAlign.center,
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 10.0),
+                          ),
+                        );
+                      } else
+                        return Container();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
         title: Text(
           'Home',

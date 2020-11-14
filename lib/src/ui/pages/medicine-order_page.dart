@@ -180,6 +180,7 @@ class _MedicineOrderPageState extends State<MedicineOrderPage> {
         userId: AppData.uId,
         timestamp: Timestamp.now(),
         files: _images,
+        isComplete: false,
       );
       Orders o = await OrderService().insertOrder(_order);
       if (o != null) {

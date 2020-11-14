@@ -15,6 +15,7 @@ class Orders extends Model {
   bool adminBillStatus;
   bool userConfirmStatus;
   bool adminAssignedBoy;
+  bool isComplete;
   String orderStatus;
   String deliveryBoyId;
   String deliveredBy;
@@ -38,6 +39,7 @@ class Orders extends Model {
     this.userId,
     this.timestamp,
     this.files,
+    this.isComplete,
   });
 
   Orders.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class Orders extends Model {
     deliveredBy = json['DeliveredBy'];
     cancelledNote = json['CancelledNote'];
     timestamp = json['timestamp'];
+    isComplete = json['isComplete'];
   }
 
   @override
@@ -76,6 +79,7 @@ class Orders extends Model {
       'DeliveredBy': deliveredBy,
       'CancelledNote': cancelledNote,
       'timestamp': timestamp,
+      'isComplete': isComplete,
     };
   }
 }
