@@ -11,7 +11,6 @@ import 'package:medicine_customer_app/src/ui/views/home-card_view.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medicine_customer_app/src/data/models/orders_model.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,20 +18,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  _fun() {
-    // FirebaseFirestore.instance
-    //     .collection('Orders')
-    //     .where('isComplete', isEqualTo: false)
-    // .get().then((value) => {
-    //   value.docs.forEach((element) {
-    //     print('isComplete: ${element["isComplete"]}');
-    //   })
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
-    _fun();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -55,7 +42,7 @@ class _HomePageState extends State<HomePage> {
                   child: StreamBuilder<QuerySnapshot>(
                     stream: OrderService().fetchInComplete(),
                     builder: (context, list) {
-                      if (list.data.size>0) {
+                      if (list.data.size > 0) {
                         return Container(
                           padding: EdgeInsets.all(2.0),
                           decoration: BoxDecoration(

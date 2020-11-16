@@ -181,12 +181,17 @@ class _MedicineOrderPageState extends State<MedicineOrderPage> {
         timestamp: Timestamp.now(),
         files: _images,
         isComplete: false,
+        address: 'Street no 2, chah bohr wala sher shah road cannt multan',
+        orderStatus: 'InComplete',
       );
       Orders o = await OrderService().insertOrder(_order);
       if (o != null) {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        navigateTo(context, OrderDetailsPage());
+        navigateTo(
+          context,
+          OrderDetailsPage(orderId: o.id),
+        );
       }
     } else {
       _scaffoldKey.currentState.showSnackBar(

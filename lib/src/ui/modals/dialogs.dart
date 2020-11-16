@@ -9,17 +9,18 @@ class ConfirmDialog extends Alert {
     String content,
     Function function,
   }) : super(
-          image: Icon(Icons.done, color: kMainColor),
+          image: Icon(Icons.done, color: Colors.red),
           context: context,
           title: 'Confirmation',
           desc: content,
           buttons: [
             DialogButton(
-                onPressed: function,
-                child: Text(
-                  'Yes',
-                  style: TextStyle(color: Colors.white),
-                )),
+              onPressed: function,
+              child: Text(
+                'Yes',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
             DialogButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
@@ -32,7 +33,7 @@ class ConfirmDialog extends Alert {
           style: AlertStyle(
             isCloseButton: false,
             titleStyle:
-                TextStyle(color: kMainColor, fontWeight: FontWeight.bold),
+                TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
         );
 }
@@ -60,6 +61,34 @@ class WaitingDialog extends Alert {
             isButtonVisible: false,
             isOverlayTapDismiss: false,
             isCloseButton: false,
+          ),
+        );
+}
+
+class InfoDialog extends Alert {
+  InfoDialog({
+    BuildContext context,
+    String content,
+  }) : super(
+          context: context,
+          title: 'Information',
+          image: Icon(Icons.info, color: Colors.green),
+          desc: content,
+          buttons: [
+            DialogButton(
+              width: 50.0,
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: Colors.green,
+            ),
+          ],
+          style: AlertStyle(
+            isCloseButton: false,
+            titleStyle:
+                TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
           ),
         );
 }

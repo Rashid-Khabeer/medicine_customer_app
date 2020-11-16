@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medicine_customer_app/src/data/models/_model.dart';
 
 class Orders extends Model {
+  // String orders = 'Rashid' 'Khabeer' 'is a good boy';
   String orderCategory;
   List<String> imagesUrl;
   List<File> files;
@@ -21,6 +22,7 @@ class Orders extends Model {
   String deliveredBy;
   String cancelledNote;
   Timestamp timestamp;
+  String address;
 
   Orders({
     this.price,
@@ -40,11 +42,13 @@ class Orders extends Model {
     this.timestamp,
     this.files,
     this.isComplete,
+    this.address,
   });
 
   Orders.fromJson(Map<String, dynamic> json) {
     orderCategory = json['OrderCategory'];
-    imagesUrl = json['ImagesUrl'];
+    imagesUrl = List<String>();
+    (json['ImagesUrl'] as List<dynamic>).forEach((e) => imagesUrl.add(e));
     note = json['Note'];
     userId = json['UserId'];
     price = json['Price'];
@@ -59,6 +63,7 @@ class Orders extends Model {
     cancelledNote = json['CancelledNote'];
     timestamp = json['timestamp'];
     isComplete = json['isComplete'];
+    address = json['Address'];
   }
 
   @override
@@ -80,6 +85,7 @@ class Orders extends Model {
       'CancelledNote': cancelledNote,
       'timestamp': timestamp,
       'isComplete': isComplete,
+      'Address': address,
     };
   }
 }

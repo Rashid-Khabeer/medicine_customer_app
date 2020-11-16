@@ -56,7 +56,6 @@ class _ImageSelectorState extends State<ImageSelector> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onLongPress: () => _deleteDialog(index),
-                  onTap: () => print('Hello'),
                   child: Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
