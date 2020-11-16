@@ -9,7 +9,7 @@ class ConfirmDialog extends Alert {
     String content,
     Function function,
   }) : super(
-          image: Icon(Icons.done, color: Colors.red),
+          image: Icon(Icons.done, color: kMainColor),
           context: context,
           title: 'Confirmation',
           desc: content,
@@ -33,7 +33,7 @@ class ConfirmDialog extends Alert {
           style: AlertStyle(
             isCloseButton: false,
             titleStyle:
-                TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                TextStyle(color: kMainColor, fontWeight: FontWeight.bold),
           ),
         );
 }
@@ -89,6 +89,34 @@ class InfoDialog extends Alert {
             isCloseButton: false,
             titleStyle:
                 TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+          ),
+        );
+}
+
+class ErrorDialog extends Alert {
+  ErrorDialog({
+    BuildContext context,
+    String content,
+  }) : super(
+          image: Icon(Icons.warning, color: Colors.red),
+          context: context,
+          title: 'Error',
+          desc: content,
+          buttons: [
+            DialogButton(
+              width: 50.0,
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: Colors.red,
+            ),
+          ],
+          style: AlertStyle(
+            isCloseButton: false,
+            titleStyle:
+                TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
           ),
         );
 }

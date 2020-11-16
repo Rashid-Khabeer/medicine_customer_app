@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:connectivity/connectivity.dart';
+
 class AppUtils {
   static String getMonthName(int month) {
     switch (month) {
@@ -39,6 +42,16 @@ class AppUtils {
         break;
       default:
         return 'Invalid Number';
+    }
+  }
+
+  static Future<bool> checkInternet() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

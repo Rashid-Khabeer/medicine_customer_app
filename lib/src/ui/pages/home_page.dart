@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'dart:ui';
 import 'package:medicine_customer_app/src/constants.dart';
 import 'package:medicine_customer_app/src/data/app_data.dart';
 import 'package:medicine_customer_app/src/services/order_service.dart';
+import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
 import 'package:medicine_customer_app/src/ui/pages/cart_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/edit-address_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/medicine-order_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/ordes-history_page.dart';
 import 'package:medicine_customer_app/src/ui/views/home-card_view.dart';
+import 'package:medicine_customer_app/src/utility/app_utils.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    // AppUtils.checkInternet(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -34,7 +38,9 @@ class _HomePageState extends State<HomePage> {
                     color: kMainColor,
                     size: 28.0,
                   ),
-                  onPressed: () => navigateTo(context, CartPage()),
+                  onPressed: () {
+                    navigateTo(context, CartPage());
+                  },
                 ),
                 Positioned(
                   right: 11,
@@ -42,7 +48,8 @@ class _HomePageState extends State<HomePage> {
                   child: StreamBuilder<QuerySnapshot>(
                     stream: OrderService().fetchInComplete(),
                     builder: (context, list) {
-                      if (list.data.size > 0) {
+                      int _size = list.data?.size ?? -1;
+                      if (_size > 0) {
                         return Container(
                           padding: EdgeInsets.all(2.0),
                           decoration: BoxDecoration(

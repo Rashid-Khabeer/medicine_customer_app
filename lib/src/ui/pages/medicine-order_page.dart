@@ -170,35 +170,44 @@ class _MedicineOrderPageState extends State<MedicineOrderPage> {
       _flag = true;
     }
     if (_flag) {
-      WaitingDialog(context: context).show();
-      Orders _order = Orders(
-        adminAssignedBoy: false,
-        adminBillStatus: false,
-        note: _note ?? '',
-        orderCategory: 'Medicine',
-        userConfirmStatus: false,
-        userId: AppData.uId,
-        timestamp: Timestamp.now(),
-        files: _images,
-        isComplete: false,
-        address: 'Street no 2, chah bohr wala sher shah road cannt multan',
-        orderStatus: 'InComplete',
-      );
-      Orders o = await OrderService().insertOrder(_order);
-      if (o != null) {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        navigateTo(
-          context,
-          OrderDetailsPage(orderId: o.id),
-        );
-      }
+      ConfirmDialog(
+        context: context,
+        content: 'This app is only for Multan, Order if you are from Multan',
+        function: _orderAction,
+      ).show();
     } else {
       _scaffoldKey.currentState.showSnackBar(
         ShowSnackBar(
           icon: Icons.error,
           text: 'Please enter medicine info or upload prescription',
         ),
+      );
+    }
+  }
+
+  _orderAction() async {
+    Navigator.of(context).pop();
+    WaitingDialog(context: context).show();
+    Orders _order = Orders(
+      adminAssignedBoy: false,
+      adminBillStatus: false,
+      note: _note ?? '',
+      orderCategory: 'Medicine',
+      userConfirmStatus: false,
+      userId: AppData.uId,
+      timestamp: Timestamp.now(),
+      files: _images,
+      isComplete: false,
+      address: 'Street no 2, chah bohr wala sher shah road cannt multan',
+      orderStatus: 'InComplete',
+    );
+    Orders o = await OrderService().insertOrder(_order);
+    if (o != null) {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      navigateTo(
+        context,
+        OrderDetailsPage(orderId: o.id),
       );
     }
   }
