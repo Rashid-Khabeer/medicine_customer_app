@@ -1,17 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medicine_customer_app/src/constants.dart';
+import 'package:medicine_customer_app/src/data/app_data.dart';
+import 'package:medicine_customer_app/src/data/models/chat_model.dart';
+import 'package:medicine_customer_app/src/services/chat_service.dart';
 import 'package:medicine_customer_app/src/ui/widgets/chat_bubble-widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:medicine_customer_app/src/ui/widgets/simple-stream-builder_widget.dart';
 
-class ChatPage extends StatefulWidget {
-  @override
-  _ChatPageState createState() => _ChatPageState();
-}
+class ChatPage extends StatelessWidget {
+  final orderChatId;
 
-class _ChatPageState extends State<ChatPage> {
+  ChatPage({this.orderChatId});
+
+  final TextEditingController _textController = TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           'Rider',
@@ -20,32 +29,31 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Column(
         children: [
-          Expanded(child: Container()),
-          Align(
-            alignment: Alignment.centerRight,
-            child: ChatBubbleWidget(
-              isMe: true,
-              isSeen: true,
-              message: 'Hello',
-              time: '9:30 AM',
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: ChatBubbleWidget(
-              isMe: false,
-              isSeen: true,
-              message: 'This is a dummy chat design',
-              time: '9:31 AM',
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: ChatBubbleWidget(
-              isMe: true,
-              isSeen: false,
-              message: 'OK',
-              time: '9:32 AM',
+          Expanded(
+            child: SimpleStreamBuilder.simpler(
+              stream: ChatService(orderChatId: orderChatId)
+                  .fetchAllSortedFirestore(),
+              context: context,
+              builder: (List<Chat> list) {
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: list.length,
+                  controller: _scrollController,
+                  itemBuilder: (context, index) {
+                    Chat chat = list.elementAt(index);
+                    chat.isReadByUser = true;
+                    ChatService(orderChatId: orderChatId).updateFirestore(chat);
+                    return ChatBubbleWidget(
+                      message: chat.text,
+                      isSeen: chat.isReadByRider,
+                      isMe: AppData.uId == chat.sentBy ? true : false,
+                      time: ((DateTime date) =>
+                              "${(date.hour % 12) == 0 ? 12 : date.hour % 12}:${date.minute} ${date.hour >= 12 ? 'PM' : 'AM'}")(
+                          chat.timestamp.toDate()),
+                    );
+                  },
+                );
+              },
             ),
           ),
           Container(
@@ -59,25 +67,13 @@ class _ChatPageState extends State<ChatPage> {
                       elevation: 3,
                       borderRadius: BorderRadius.circular(50),
                       child: CupertinoTextField(
+                        controller: _textController,
                         padding: EdgeInsets.all(15.0),
-                        maxLines: null, placeholder: 'Type a message...',
+                        maxLines: null,
+                        placeholder: 'Type a message...',
                         decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(5.0))),
-                        // decoration: InputDecoration(
-                        //   contentPadding: EdgeInsets.only(
-                        //       top: 13.0, bottom: 13.0, left: 20),
-                        //   hintText: 'Type a message...',
-                        //   hintStyle: TextStyle(color: Colors.black54),
-                        //   enabledBorder: OutlineInputBorder(
-                        //     borderSide: BorderSide(
-                        //         color: Colors.transparent, width: 5.0),
-                        //   ),
-                        //   focusedBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(50),
-                        //       borderSide:
-                        //           BorderSide(color: Colors.green.shade100)),
-                        // ),
                       ),
                     ),
                   ),
@@ -99,7 +95,7 @@ class _ChatPageState extends State<ChatPage> {
                       Icons.send_outlined,
                       color: Colors.white,
                     ),
-                    onPressed: () {},
+                    onPressed: _sendAction,
                   ),
                 ),
               ],
@@ -108,5 +104,21 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ),
     );
+  }
+
+  _sendAction() async {
+    if (_textController.text.isNotEmpty) {
+      Chat _chat = Chat(
+        sentBy: AppData.uId,
+        timestamp: Timestamp.now(),
+        isReadByUser: true,
+        isReadByRider: false,
+        text: _textController.text,
+      );
+      await ChatService(orderChatId: orderChatId).insertFirestore(_chat);
+      _textController.text = '';
+    } else {
+      print('Empty String');
+    }
   }
 }

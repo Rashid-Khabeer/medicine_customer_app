@@ -23,6 +23,7 @@ class Orders extends Model {
   String cancelledNote;
   Timestamp timestamp;
   String address;
+  String orderChatId;
 
   Orders({
     this.price,
@@ -43,6 +44,7 @@ class Orders extends Model {
     this.files,
     this.isComplete,
     this.address,
+    this.orderChatId,
   });
 
   Orders.fromJson(Map<String, dynamic> json) {
@@ -64,6 +66,7 @@ class Orders extends Model {
     timestamp = json['timestamp'];
     isComplete = json['isComplete'];
     address = json['Address'];
+    orderChatId = json['orderChatId'];
   }
 
   @override
@@ -86,6 +89,7 @@ class Orders extends Model {
       'timestamp': timestamp,
       'isComplete': isComplete,
       'Address': address,
+      'orderChatId': orderChatId,
     };
   }
 }

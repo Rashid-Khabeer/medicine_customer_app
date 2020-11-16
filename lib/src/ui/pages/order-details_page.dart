@@ -1,5 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medicine_customer_app/src/constants.dart';
+import 'package:medicine_customer_app/src/data/app_data.dart';
+import 'package:medicine_customer_app/src/data/models/chat_model.dart';
+import 'package:medicine_customer_app/src/data/models/order-chat_model.dart';
 import 'package:medicine_customer_app/src/data/models/orders_model.dart';
+import 'package:medicine_customer_app/src/services/chat_service.dart';
+import 'package:medicine_customer_app/src/services/order-chat_service.dart';
 import 'package:medicine_customer_app/src/services/order_service.dart';
 import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
 import 'package:medicine_customer_app/src/ui/pages/chat_page.dart';
@@ -183,7 +189,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                               Icon(CupertinoIcons.chat_bubble),
                               Text('For special instruction: '),
                               GestureDetector(
-                                onTap: () => navigateTo(context, ChatPage()),
+                                onTap: _chatAction,
                                 child: Text(
                                   'Contact With Rider',
                                   style: k16TextStyle.copyWith(
@@ -254,5 +260,37 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         Navigator.of(context).pop();
       },
     ).show();
+  }
+
+  _chatAction() async {
+    if (_order.orderChatId?.isNotEmpty ?? false)
+      navigateTo(
+        context,
+        ChatPage(orderChatId: _order.orderChatId),
+      );
+    else {
+      WaitingDialog(context: context).show();
+      OrderChat _orderChat = OrderChat(
+        timestamp: Timestamp.now(),
+        userId: AppData.uId,
+        riderId: _order.deliveryBoyId,
+      );
+      _orderChat = await OrderChatService().insertFirestore(_orderChat);
+      _order.orderChatId = _orderChat.id;
+      await OrderService().updateFirestore(_order);
+      Chat _chat = Chat(
+        timestamp: Timestamp.now(),
+        text: 'I am moving forward towards you!!',
+        isReadByRider: false,
+        isReadByUser: false,
+        sentBy: _order.deliveryBoyId,
+      );
+      await ChatService(orderChatId: _orderChat.id).insertFirestore(_chat);
+      Navigator.of(context).pop();
+      navigateTo(
+        context,
+        ChatPage(orderChatId: _order.orderChatId),
+      );
+    }
   }
 }
