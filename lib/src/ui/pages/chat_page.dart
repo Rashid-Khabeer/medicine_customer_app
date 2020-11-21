@@ -56,49 +56,18 @@ class ChatPage extends StatelessWidget {
               },
             ),
           ),
-          Container(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 5.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 12.0, left: 8, right: 8),
-                    child: Material(
-                      elevation: 3,
-                      borderRadius: BorderRadius.circular(50),
-                      child: CupertinoTextField(
-                        controller: _textController,
-                        padding: EdgeInsets.all(15.0),
-                        maxLines: null,
-                        placeholder: 'Type a message...',
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0))),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 45,
-                  height: 45,
-                  margin: EdgeInsets.only(right: 10, bottom: 13),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: kMainColor,
-                  ),
-                  child: IconButton(
-                    padding:
-                        EdgeInsets.only(left: 4, right: 11, top: 0, bottom: 13),
-                    alignment: Alignment.bottomRight,
-                    iconSize: 20,
-                    icon: Icon(
-                      Icons.send_outlined,
-                      color: Colors.white,
-                    ),
-                    onPressed: _sendAction,
-                  ),
-                ),
-              ],
+          TextField(
+            style: TextStyle(fontSize: 18),
+            controller: _textController,
+            decoration: InputDecoration(
+              // border: OutlineInputBorder(),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              hintText: 'Type a Message',
+              suffixIcon: IconButton(
+                icon: Icon(Icons.send_outlined),
+                onPressed: _sendAction,
+              ),
             ),
           ),
         ],
@@ -117,8 +86,6 @@ class ChatPage extends StatelessWidget {
       );
       await ChatService(orderChatId: orderChatId).insertFirestore(_chat);
       _textController.text = '';
-    } else {
-      print('Empty String');
     }
   }
 }

@@ -6,18 +6,20 @@ abstract class MedicineService<T extends Model> {
 
   T parseModel(DocumentSnapshot document);
 
-  Stream<List<T>> fetchAllFirestore() => FirebaseFirestore.instance
-      .collection(collectionName)
-      .snapshots()
-      .map((snapshot) =>
-      snapshot.docs.map((document) => parseModel(document)).toList());
+  Stream<List<T>> fetchAllFirestore() =>
+      FirebaseFirestore.instance
+          .collection(collectionName)
+          .snapshots()
+          .map((snapshot) =>
+          snapshot.docs.map((document) => parseModel(document)).toList());
 
-  Stream<List<T>> fetchAllSortedFirestore() => FirebaseFirestore.instance
-      .collection(collectionName)
-      .orderBy("timestamp", descending: true)
-      .snapshots()
-      .map((snapshot) =>
-      snapshot.docs.map((document) => parseModel(document)).toList());
+  Stream<List<T>> fetchAllSortedFirestore() =>
+      FirebaseFirestore.instance
+          .collection(collectionName)
+          .orderBy("timestamp", descending: true)
+          .snapshots()
+          .map((snapshot) =>
+          snapshot.docs.map((document) => parseModel(document)).toList());
 
   Future<T> fetchOneFirestore(String id) async =>
       parseModel(await FirebaseFirestore.instance
@@ -35,8 +37,6 @@ abstract class MedicineService<T extends Model> {
     } catch (e) {
       print("exception");
       throw e;
-      // print(e);
-      // return null;
     }
   }
 

@@ -15,7 +15,8 @@ dependencies:
   cupertino_icons: ^1.0.0
   image_picker: 0.6.7+12
   rflutter_alert: ^1.1.0
-  google_maps_flutter: ^1.0.3
+  google_maps_flutter: ^1.0.6
+  geolocator: ^6.1.7
   firebase_auth: ^0.18.1+2
   cloud_firestore: ^0.14.3
   firebase_storage: ^4.0.1

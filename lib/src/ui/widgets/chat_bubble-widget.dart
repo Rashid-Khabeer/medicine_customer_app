@@ -14,20 +14,24 @@ class ChatBubbleWidget extends StatelessWidget {
     final align = isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
     final radius = isMe
         ? BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            bottomLeft: Radius.circular(10.0),
-            bottomRight: Radius.circular(18.0))
-        : BorderRadius.only(
-            topRight: Radius.circular(5.0),
+            topLeft: Radius.circular(18.0),
+            topRight: Radius.circular(18.0),
             bottomLeft: Radius.circular(18.0),
-            bottomRight: Radius.circular(5.0));
+            // bottomRight: Radius.circular(18.0),
+          )
+        : BorderRadius.only(
+            topRight: Radius.circular(18.0),
+            topLeft: Radius.circular(18.0),
+            // bottomLeft: Radius.circular(18.0),
+            bottomRight: Radius.circular(18.0),
+          );
     final Color seenColor = isSeen ? Colors.green : Colors.white;
     return Column(
       crossAxisAlignment: align,
       children: <Widget>[
         Container(
           margin: const EdgeInsets.all(5.0),
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 15.0),
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -45,7 +49,7 @@ class ChatBubbleWidget extends StatelessWidget {
                 padding: EdgeInsets.only(right: 68.0),
                 child: Text(
                   message,
-                  style: TextStyle(color: msgTxtColor, fontSize: 14.0),
+                  style: TextStyle(color: msgTxtColor, fontSize: 15.0),
                 ),
               ),
               Positioned(
