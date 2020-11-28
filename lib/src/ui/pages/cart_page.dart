@@ -70,6 +70,8 @@ class _CartPageState extends State<CartPage> {
                   status: status,
                   orderStatus: order.orderStatus,
                   isComplete: order.isComplete,
+                  orderChatId: order.orderChatId,
+                  sentBy: order.deliveryBoyId,
                 );
               },
             );

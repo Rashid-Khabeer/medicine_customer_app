@@ -10,6 +10,10 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseFirestore.instance.settings = Settings(persistenceEnabled: false);
   SharedPreferences sp = await SharedPreferences.getInstance();
+  // sp.setString('userId', 'xRx19hA4qKPrgaXIOPRIrdKlDIB3');
+  // sp.setString('userName', 'Rashid ');
+  // sp.setString('userPhone', '+923127191646');
+  // AppData.isSignedIn = true;
   // await sp.clear();
   if (sp.containsKey('userId')) {
     AppData.isSignedIn = true;

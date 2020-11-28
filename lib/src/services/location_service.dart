@@ -1,34 +1,22 @@
-// import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
-class CurrentLocation {
+class LocationService {
   double latitude;
   double longitude;
-  //
-  // bool _serviceEnabled;
-  // PermissionStatus _permissionGranted;
-  // LocationData _locationData;
-  // LocationAccuracy _locationAccuracy;
-  //
-  // Future<void> getCurrentLocation() async {
-  //   _locationAccuracy = LocationAccuracy.high;
-  //   try {
-  //     Location location = Location();
-  //     _serviceEnabled = await location.serviceEnabled();
-  //     if (!_serviceEnabled) {
-  //       _serviceEnabled = await location.requestService();
-  //       if (!_serviceEnabled) return;
-  //     }
-  //     _permissionGranted = await location.hasPermission();
-  //     if (_permissionGranted == PermissionStatus.denied) {
-  //       _permissionGranted = await location.requestPermission();
-  //       if (_permissionGranted != PermissionStatus.granted) return;
-  //     }
-  //     // location.a
-  //     _locationData = await location.getLocation();
-  //     latitude = _locationData.latitude;
-  //     longitude = _locationData.longitude;
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  Placemark place;
+
+  Future<void> getCurrentLocation() async {
+    try {
+      Position _position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+      latitude = _position.latitude;
+      longitude = _position.longitude;
+      List<Placemark> _p = await GeocodingPlatform.instance
+          .placemarkFromCoordinates(latitude, longitude);
+      place = _p[0];
+    } catch (e) {
+      print(e);
+    }
+  }
 }

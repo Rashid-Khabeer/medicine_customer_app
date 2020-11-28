@@ -1,16 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:ui';
 import 'package:medicine_customer_app/src/constants.dart';
 import 'package:medicine_customer_app/src/data/app_data.dart';
 import 'package:medicine_customer_app/src/services/order_service.dart';
-import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
+import 'package:medicine_customer_app/src/ui/pages/cancelled-orders_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/cart_page.dart';
-import 'package:medicine_customer_app/src/ui/pages/edit-address_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/medicine-order_page.dart';
 import 'package:medicine_customer_app/src/ui/pages/ordes-history_page.dart';
 import 'package:medicine_customer_app/src/ui/views/home-card_view.dart';
-import 'package:medicine_customer_app/src/utility/app_utils.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +19,46 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  //
+  // Future<dynamic> myBackgroundMessageHandler(
+  //     Map<String, dynamic> message) async {
+  //   if (message.containsKey('data')) {
+  //     // Handle data message
+  //     final dynamic data = message['data'];
+  //     print(data);
+  //   }
+  //
+  //   if (message.containsKey('notification')) {
+  //     // Handle notification message
+  //     final dynamic notification = message['notification'];
+  //     print(notification);
+  //   }
+  //   // Or do other work.
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    // _firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     print("onMessage: $message");
+    //     // _showItemDialog(message);
+    //   },
+    //   onBackgroundMessage: myBackgroundMessageHandler,
+    //   onLaunch: (Map<String, dynamic> message) async {
+    //     print("onLaunch: $message");
+    //     // _navigateToItemDetail(message);
+    //   },
+    //   onResume: (Map<String, dynamic> message) async {
+    //     print("onResume: $message");
+    //     // _navigateToItemDetail(message);
+    //   },
+    // );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // AppUtils.checkInternet(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -107,29 +142,26 @@ class _HomePageState extends State<HomePage> {
                 navigateTo(context, OrderHistoryPage());
               },
             ),
-            Container(height: 0.5, color: Colors.grey),
-            ExpansionTile(
-              title: Text('Settings'),
-              leading: Icon(CupertinoIcons.settings),
-              children: [
-                ListTile(
-                  title: Text('Edit Address'),
-                  leading: Icon(CupertinoIcons.location),
-                  onTap: () => navigateTo(context, EditAddressPage()),
-                ),
-              ],
+            Divider(color: Colors.grey, height: 0),
+            ListTile(
+              title: Text('Cancelled Orders'),
+              leading: Icon(Icons.cancel_outlined),
+              onTap: () {
+                Navigator.of(context).pop();
+                navigateTo(context, CancelledOrdersPage());
+              },
             ),
-            Container(height: 0.5, color: Colors.grey),
+            Divider(color: Colors.grey, height: 0),
             ListTile(
               title: Text('About Us'),
               leading: Icon(CupertinoIcons.info),
             ),
-            Container(height: 0.5, color: Colors.grey),
+            Divider(color: Colors.grey, height: 0),
             ListTile(
               title: Text('Exit'),
               leading: Icon(Icons.exit_to_app),
             ),
-            Container(height: 0.5, color: Colors.grey),
+            Divider(color: Colors.grey, height: 0),
           ],
         ),
       ),
@@ -170,21 +202,33 @@ class _HomePageState extends State<HomePage> {
                   child: HomeCardView(
                     title: 'Medicine',
                     imagePath: 'assets/images/medicine.jpg',
-                    onTap: () => navigateTo(context, MedicineOrderPage()),
+                    onTap: () => navigateTo(
+                        context,
+                        MedicineOrderPage(
+                          category: 'Medicine',
+                        )),
                     textColor: Colors.white,
                   ),
                 ),
                 HomeCardView(
                   title: 'DRIP/INJECTION',
                   imagePath: 'assets/images/drips.jpg',
-                  onTap: () => navigateTo(context, MedicineOrderPage()),
+                  onTap: () => navigateTo(
+                      context,
+                      MedicineOrderPage(
+                        category: 'Drip/Injection',
+                      )),
                   textColor: Colors.white,
                 ),
                 SizedBox(height: 15.0),
                 HomeCardView(
                   title: 'TESTS',
                   imagePath: 'assets/images/tests.jpg',
-                  onTap: () => navigateTo(context, MedicineOrderPage()),
+                  onTap: () => navigateTo(
+                      context,
+                      MedicineOrderPage(
+                        category: 'Tests',
+                      )),
                   textColor: Colors.white,
                 ),
               ],

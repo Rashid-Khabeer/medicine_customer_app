@@ -46,12 +46,11 @@ class AppUtils {
   }
 
   static Future<bool> checkInternet() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile) {
-      return true;
-    } else {
-      return false;
+    bool hasConnection = false;
+    var result = await Connectivity().checkConnectivity();
+    if (result != ConnectivityResult.none) {
+      hasConnection = true;
     }
+    return hasConnection;
   }
 }

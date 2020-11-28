@@ -120,3 +120,51 @@ class ErrorDialog extends Alert {
           ),
         );
 }
+
+class CancelOrderDialog extends Alert {
+  CancelOrderDialog({
+    BuildContext context,
+    Function function,
+    Function(String value) onChange,
+  }) : super(
+          image: Icon(Icons.done, color: kMainColor),
+          context: context,
+          title: 'Are you sure?',
+          content: CupertinoTextField(
+            onChanged: (value) {
+              onChange(value);
+            },
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            style: TextStyle(fontSize: 20.0),
+            padding: EdgeInsets.all(5.0),
+            placeholder: 'Reason',
+            // placeholderStyle: TextStyle(fontSize: 20.0),
+            keyboardType: TextInputType.text,
+          ),
+          buttons: [
+            DialogButton(
+              onPressed: function,
+              child: Text(
+                'Yes',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            DialogButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'No',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: Colors.red,
+            ),
+          ],
+          style: AlertStyle(
+            isCloseButton: false,
+            titleStyle:
+                TextStyle(color: kMainColor, fontWeight: FontWeight.bold),
+          ),
+        );
+}

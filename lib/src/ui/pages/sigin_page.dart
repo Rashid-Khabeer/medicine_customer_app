@@ -1,7 +1,9 @@
 import 'package:medicine_customer_app/src/constants.dart';
+import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
 import 'package:medicine_customer_app/src/ui/modals/snackbar.dart';
 import 'package:medicine_customer_app/src/ui/pages/verification_page.dart';
 import 'package:medicine_customer_app/src/ui/widgets/button_widget.dart';
+import 'package:medicine_customer_app/src/utility/app_utils.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +93,11 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
-  _continueAction() {
+  _continueAction() async {
+    if (!(await AppUtils.checkInternet())) {
+      ErrorDialog(context: context, content: 'No Internet Connection').show();
+      return;
+    }
     if (_key.currentState.validate()) {
       _scaffoldKey.currentState.showSnackBar(
         ShowSnackBar(icon: Icons.info_outline, text: 'Sending OTP'),

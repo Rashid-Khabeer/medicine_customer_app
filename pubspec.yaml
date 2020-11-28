@@ -15,15 +15,16 @@ dependencies:
   cupertino_icons: ^1.0.0
   image_picker: 0.6.7+12
   rflutter_alert: ^1.1.0
-  google_maps_flutter: ^1.0.6
   geolocator: ^6.1.7
+  geocoding: ^1.0.5
   firebase_auth: ^0.18.1+2
   cloud_firestore: ^0.14.3
   firebase_storage: ^4.0.1
   firebase_core: ^0.5.1
   shared_preferences: ^0.5.12+4
   path_provider: ^1.6.24
-  connectivity: ^2.0.1
+  firebase_messaging: ^7.0.3
+  connectivity: ^2.0.2
 
 dev_dependencies:
   flutter_test:

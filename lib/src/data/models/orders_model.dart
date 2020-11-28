@@ -25,6 +25,8 @@ class Orders extends Model {
   bool isReadByAdmin;
   bool isReadByRider;
   String cancelledBy;
+  double latitude;
+  double longitude;
 
   Orders({
     this.price,
@@ -49,6 +51,8 @@ class Orders extends Model {
     this.isReadByRider,
     this.isReadByAdmin,
     this.cancelledBy,
+    this.latitude,
+    this.longitude,
   });
 
   Orders.fromJson(Map<String, dynamic> json) {
@@ -74,6 +78,8 @@ class Orders extends Model {
     isReadByRider = json['isReadByRider'];
     isReadByAdmin = json['isReadByAdmin'];
     cancelledBy = json['cancelledBy'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
   }
 
   @override
@@ -100,6 +106,8 @@ class Orders extends Model {
       'isReadByRider': isReadByRider,
       'isReadByAdmin': isReadByAdmin,
       'cancelledBy': cancelledBy,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 }

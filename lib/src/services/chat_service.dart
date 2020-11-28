@@ -15,4 +15,14 @@ class ChatService extends MedicineService<Chat> {
   Chat parseModel(DocumentSnapshot document) {
     return Chat.fromJson(document.data())..id = document.id;
   }
+
+  Stream<QuerySnapshot> fetchUnRead(String sentBy) async* {
+    print(sentBy);
+    final snapshots = FirebaseFirestore.instance
+        .collection(collectionName)
+        .where('isReadyByUser', isEqualTo: false)
+        .where('sentBy', isEqualTo: sentBy)
+        .snapshots();
+    yield* snapshots;
+  }
 }

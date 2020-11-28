@@ -6,6 +6,7 @@ import 'package:medicine_customer_app/src/services/user_service.dart';
 import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
 import 'package:medicine_customer_app/src/ui/modals/snackbar.dart';
 import 'package:medicine_customer_app/src/ui/pages/home_page.dart';
+import 'package:medicine_customer_app/src/ui/pages/sigin_page.dart';
 import 'package:medicine_customer_app/src/ui/widgets/button_widget.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,23 +34,20 @@ class _VerificationPageState extends State<VerificationPage> {
   _firebaseAuthentication(String phone) async {
     _auth.verifyPhoneNumber(
       phoneNumber: phone,
-      timeout: Duration(seconds: 90),
+      timeout: const Duration(seconds: 60),
       verificationCompleted: (AuthCredential credential) async {
         WaitingDialog(context: context).show();
         _signInUser(credential);
       },
-      verificationFailed: (FirebaseAuthException ex) {
-        // Navigator.of(context).pop();
+      verificationFailed: (FirebaseAuthException ex) async {
         _scaffoldKey.currentState.showSnackBar(
           ShowSnackBar(
             icon: Icons.error,
-            text: '$ex',
+            text: '${ex.code}, Please send Again',
           ),
         );
-        print('Exception is: $ex');
-        if (ex.code == 'invalid-phone-number') {
-          print('The provided phone number is not valid');
-        }
+        await Future.delayed(Duration(seconds: 4));
+        navigateTo(context, SigninPage(), true);
       },
       codeSent: (String verificationId, [int forceResendingToken]) {
         setState(() => _clickable = true);
@@ -69,14 +67,21 @@ class _VerificationPageState extends State<VerificationPage> {
   }
 
   _signInUser(AuthCredential credential) async {
-    UserCredential userCredential =
-        await _auth.signInWithCredential(credential);
-    User user = userCredential.user;
-    if (user != null) {
-      _saveUser(user.uid);
-    } else {
-      print('Error');
-    }
+    await _auth.signInWithCredential(credential).then((result) {
+      if (result.user != null) {
+        _saveUser(result.user.uid);
+      } else {
+        print('Error');
+      }
+    }).catchError((e) {
+      Navigator.of(context).pop();
+      _scaffoldKey.currentState.showSnackBar(
+        ShowSnackBar(
+          icon: Icons.error,
+          text: '${e.code}',
+        ),
+      );
+    });
   }
 
   _saveUser(String userId) {
@@ -89,9 +94,7 @@ class _VerificationPageState extends State<VerificationPage> {
     UserService().fetchNumberFirestore(_user.phoneNumber).then((value) async {
       if (value.docs?.isEmpty ?? true) {
         _insertedUser = await UserService().insertUser(_user);
-        print('Insert');
       } else {
-        print('Update');
         UserModel u = UserService().parseModel(value.docs.first);
         u.name = _user.name;
         await UserService().updateFirestore(u);
@@ -119,7 +122,6 @@ class _VerificationPageState extends State<VerificationPage> {
   }
 
   _pressedAction() {
-    print('Clicked');
     if (_formKey.currentState.validate()) {
       WaitingDialog(context: context).show();
       _formKey.currentState.save();
