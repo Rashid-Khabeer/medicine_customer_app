@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medicine_customer_app/src/constants.dart';
 import 'package:medicine_customer_app/src/data/app_data.dart';
 import 'package:medicine_customer_app/src/data/models/orders_model.dart';
+import 'package:medicine_customer_app/src/services/admin_service.dart';
+import 'package:medicine_customer_app/src/services/fcm-message_service.dart';
 import 'package:medicine_customer_app/src/services/location_service.dart';
 import 'package:medicine_customer_app/src/services/order_service.dart';
 import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
@@ -263,10 +265,20 @@ class _MedicineOrderPageState extends State<MedicineOrderPage> {
       }
       Navigator.of(context).pop();
       Navigator.of(context).pop();
+      _sendFcm(o.address);
       navigateTo(
         context,
         OrderDetailsPage(orderId: o.id),
       );
     }
+  }
+
+  _sendFcm(String message) async {
+    String adminToken = (await AdminService().fetchAdmin()).token;
+    await FcmMessageService.sendFcmMessage(
+      title: 'New Order',
+      message: 'New Order from $message',
+      token: adminToken,
+    );
   }
 }

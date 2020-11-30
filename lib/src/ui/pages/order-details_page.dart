@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medicine_customer_app/src/constants.dart';
 import 'package:medicine_customer_app/src/data/app_data.dart';
+import 'package:medicine_customer_app/src/data/models/admin_model.dart';
 import 'package:medicine_customer_app/src/data/models/chat_model.dart';
+import 'package:medicine_customer_app/src/data/models/delivery-boy_model.dart';
 import 'package:medicine_customer_app/src/data/models/order-chat_model.dart';
 import 'package:medicine_customer_app/src/data/models/orders_model.dart';
+import 'package:medicine_customer_app/src/services/admin_service.dart';
 import 'package:medicine_customer_app/src/services/chat_service.dart';
+import 'package:medicine_customer_app/src/services/delivery-boy_service.dart';
+import 'package:medicine_customer_app/src/services/fcm-message_service.dart';
 import 'package:medicine_customer_app/src/services/order-chat_service.dart';
 import 'package:medicine_customer_app/src/services/order_service.dart';
 import 'package:medicine_customer_app/src/ui/modals/dialogs.dart';
@@ -298,6 +303,13 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     _order.userConfirmStatus = true;
     WaitingDialog(context: context).show();
     await OrderService().updateFirestore(_order);
+    String adminToken = (await AdminService().fetchAdmin()).token;
+    await FcmMessageService.sendFcmMessage(
+      message:
+          '${_order.address} confirmed the order of ${_order.total}, Assign Delivery Boy',
+      title: 'Order Confirmed',
+      token: adminToken,
+    );
     Navigator.of(context).pop();
     InfoDialog(context: context, content: 'Your order is ready to ship').show();
   }
@@ -326,15 +338,38 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     _order.cancelledBy = 'user';
     _order.cancelledNote = cancelNote;
     WaitingDialog(context: context).show();
+    String adminToken = (await AdminService().fetchAdmin()).token;
+    await FcmMessageService.sendFcmMessage(
+      message:
+          '${_order.address} cancelled the order due to ${_order.cancelledNote}',
+      title: 'Order Cancelled',
+      token: adminToken,
+    );
     await OrderService().updateFirestore(_order);
     Navigator.of(context).pop();
   }
 
   _chatAction() async {
+    String token;
+    String name;
+    if (_order.deliveredBy == 'admin') {
+      Admin admin = await AdminService().fetchAdmin();
+      token = admin.token;
+      name = admin.name;
+    } else {
+      DeliveryBoy boy =
+          await DeliveryBoyService().fetchOneFirestore(_order.deliveryBoyId);
+      token = boy.token;
+      name = boy.userName;
+    }
     if (_order.orderChatId?.isNotEmpty ?? false)
       navigateTo(
         context,
-        ChatPage(orderChatId: _order.orderChatId),
+        ChatPage(
+          orderChatId: _order.orderChatId,
+          token: token,
+          name: name,
+        ),
       );
     else {
       WaitingDialog(context: context).show();
@@ -357,7 +392,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       Navigator.of(context).pop();
       navigateTo(
         context,
-        ChatPage(orderChatId: _order.orderChatId),
+        ChatPage(
+          orderChatId: _order.orderChatId,
+          token: token,
+          name: name,
+        ),
       );
     }
   }

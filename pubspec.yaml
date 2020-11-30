@@ -25,6 +25,7 @@ dependencies:
   path_provider: ^1.6.24
   firebase_messaging: ^7.0.3
   connectivity: ^2.0.2
+  http: ^0.12.2
 
 dev_dependencies:
   flutter_test:

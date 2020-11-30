@@ -3,6 +3,7 @@ import 'package:medicine_customer_app/src/constants.dart';
 import 'package:medicine_customer_app/src/data/app_data.dart';
 import 'package:medicine_customer_app/src/data/models/chat_model.dart';
 import 'package:medicine_customer_app/src/services/chat_service.dart';
+import 'package:medicine_customer_app/src/services/fcm-message_service.dart';
 import 'package:medicine_customer_app/src/ui/widgets/chat_bubble-widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,10 @@ import 'package:medicine_customer_app/src/ui/widgets/simple-stream-builder_widge
 
 class ChatPage extends StatelessWidget {
   final orderChatId;
+  final token;
+  final name;
 
-  ChatPage({this.orderChatId});
+  ChatPage({this.orderChatId, this.token, this.name});
 
   final TextEditingController _textController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -23,7 +26,7 @@ class ChatPage extends StatelessWidget {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          'Rider',
+          '$name',
           style: kAppBarStyle,
         ),
       ),
@@ -85,6 +88,11 @@ class ChatPage extends StatelessWidget {
         text: _textController.text,
       );
       await ChatService(orderChatId: orderChatId).insertFirestore(_chat);
+      await FcmMessageService.sendFcmMessage(
+        message: _chat.text,
+        title: 'New Message',
+        token: token,
+      );
       _textController.text = '';
     }
   }

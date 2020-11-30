@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:ui';
 import 'package:medicine_customer_app/src/constants.dart';
 import 'package:medicine_customer_app/src/data/app_data.dart';
@@ -12,6 +11,8 @@ import 'package:medicine_customer_app/src/ui/views/home-card_view.dart';
 import 'package:medicine_customer_app/src/utility/navigator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:medicine_customer_app/src/ui/widgets/button_widget.dart';
+import 'package:medicine_customer_app/src/services/fcm-message_service.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -99,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                             '${list.data.size}',
                             textAlign: TextAlign.center,
                             style:
-                                TextStyle(color: Colors.white, fontSize: 10.0),
+                            TextStyle(color: Colors.white, fontSize: 10.0),
                           ),
                         );
                       } else
@@ -202,33 +203,36 @@ class _HomePageState extends State<HomePage> {
                   child: HomeCardView(
                     title: 'Medicine',
                     imagePath: 'assets/images/medicine.jpg',
-                    onTap: () => navigateTo(
-                        context,
-                        MedicineOrderPage(
-                          category: 'Medicine',
-                        )),
+                    onTap: () =>
+                        navigateTo(
+                            context,
+                            MedicineOrderPage(
+                              category: 'Medicine',
+                            )),
                     textColor: Colors.white,
                   ),
                 ),
                 HomeCardView(
                   title: 'DRIP/INJECTION',
                   imagePath: 'assets/images/drips.jpg',
-                  onTap: () => navigateTo(
-                      context,
-                      MedicineOrderPage(
-                        category: 'Drip/Injection',
-                      )),
+                  onTap: () =>
+                      navigateTo(
+                          context,
+                          MedicineOrderPage(
+                            category: 'Drip/Injection',
+                          )),
                   textColor: Colors.white,
                 ),
                 SizedBox(height: 15.0),
                 HomeCardView(
                   title: 'TESTS',
                   imagePath: 'assets/images/tests.jpg',
-                  onTap: () => navigateTo(
-                      context,
-                      MedicineOrderPage(
-                        category: 'Tests',
-                      )),
+                  onTap: () =>
+                      navigateTo(
+                          context,
+                          MedicineOrderPage(
+                            category: 'Tests',
+                          )),
                   textColor: Colors.white,
                 ),
               ],
